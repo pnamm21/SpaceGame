@@ -10,6 +10,7 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
     Image background;
     Timer timer;
     Vector<Alien> aliens = new Vector<>();
+    Vector<Bullets> bullets = new Vector<>();
 
     public static void main(String[] args) {
         new SpaceInRaiders();
@@ -54,6 +55,13 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
         while(enumeration.hasMoreElements()){
             enumeration.nextElement().draw(graphics,this);
         }
+
+        //Show Bullets
+        Enumeration<Bullets> bulletsEnumeration = bullets.elements();
+        while(bulletsEnumeration.hasMoreElements()){
+            bulletsEnumeration.nextElement().draw(graphics,this
+            );
+        }
     }
 
     @Override
@@ -64,12 +72,19 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT -> player.direction = 3;
             case KeyEvent.VK_RIGHT -> player.direction = 4;
+            case KeyEvent.VK_SPACE -> {
+                int bulletX = player.x + player.width / 2 - 5;
+                int bulletY = player.y;
+                bullets.add(new Bullets(bulletX, bulletY));
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        player.direction = 0;
+        if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            player.direction = 0;
+        }
     }
 
     @Override
@@ -84,11 +99,21 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
             move();
             repaint();
 
-            //Aliens move
+            // Move Aliens
             Enumeration<Alien> alienEnumeration = aliens.elements();
-            while(alienEnumeration.hasMoreElements()){
+            while (alienEnumeration.hasMoreElements()) {
                 Alien alien = alienEnumeration.nextElement();
                 alien.move();
+            }
+
+            // Move and remove Bullets
+            for (int i = 0; i < bullets.size(); i++) {
+                Bullets bullet = bullets.get(i);
+                bullet.move();
+                if (bullet.y + bullet.height < 0) {
+                    bullets.remove(i);
+                    i--;
+                }
             }
 
             try {

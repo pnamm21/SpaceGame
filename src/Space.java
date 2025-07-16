@@ -5,10 +5,11 @@ public abstract class Space extends Rectangle {
     Image image;
     int speed;
     int direction;
-    static int UP = 1;
-    static int DOWN = 2;
-    static int LEFT = 3;
-    static int RIGHT = 4;
+    public static final int UP = 1;
+    public static final int DOWN = 2;
+    public static final int LEFT = 3;
+    public static final int RIGHT = 4;
+    public static final int SPACE = 5;
 
     public Space(int start_x, int start_y){
         x = start_x;
@@ -21,10 +22,11 @@ public abstract class Space extends Rectangle {
     }
 
     public void move() {
-        if (direction == RIGHT) {
-            x += speed;
-        } else if (direction == LEFT) {
-            x -= speed;
+        switch (direction) {
+            case RIGHT -> x += speed;
+            case LEFT -> x -= speed;
+            case SPACE -> y -= speed;
+            case DOWN -> y += speed;
         }
     }
 

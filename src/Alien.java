@@ -14,6 +14,15 @@ public class Alien extends Space{
 
     public void move(){
         super.move();
+        if (x > 1320){
+            direction = LEFT;
+            y += 70;
+        }
+
+        if (x < 30){
+            direction = RIGHT;
+            y += 70;
+        }
     }
 
 }
