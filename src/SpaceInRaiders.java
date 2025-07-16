@@ -1,11 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class SpaceInRaiders extends JPanel implements KeyListener, ActionListener, Runnable {
 
     Player player;
     Image background;
+    Timer timer;
+    Vector<Alien> aliens = new Vector<>();
 
     public static void main(String[] args) {
         new SpaceInRaiders();
@@ -29,9 +33,13 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
 
         background = Toolkit.getDefaultToolkit().getImage(getClass().getResource("background.png"));
 
-
         Thread thread = new Thread(this);
         thread.start();
+
+        // Timer for Aliens beginning
+        timer = new Timer(1000,this);
+        timer.start();
+
 
         main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -40,6 +48,12 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
         super.paintComponent(graphics);
         graphics.drawImage(background, 0, 0, getWidth(),getHeight(), this);
         player.draw(graphics,this);
+
+        //Show Aliens
+        Enumeration<Alien> enumeration = aliens.elements();
+        while(enumeration.hasMoreElements()){
+            enumeration.nextElement().draw(graphics,this);
+        }
     }
 
     @Override
@@ -59,7 +73,9 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {}
+    public void actionPerformed(ActionEvent e) {
+        aliens.add(new Alien(30, 20));
+    }
 
     @Override
     public void run() {
@@ -67,6 +83,13 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
 
             move();
             repaint();
+
+            //Aliens move
+            Enumeration<Alien> alienEnumeration = aliens.elements();
+            while(alienEnumeration.hasMoreElements()){
+                Alien alien = alienEnumeration.nextElement();
+                alien.move();
+            }
 
             try {
                 Thread.sleep(20);

@@ -20,4 +20,12 @@ public abstract class Space extends Rectangle {
         graphics.drawImage(image, x, y,width,height, component);
     }
 
+    public void move() {
+        if (direction == RIGHT) {
+            x += speed;
+        } else if (direction == LEFT) {
+            x -= speed;
+        }
+    }
+
 }
