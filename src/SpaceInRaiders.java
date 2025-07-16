@@ -1,13 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class SpaceInRaiders extends JPanel implements KeyListener, ActionListener, Runnable {
 
     Player player;
+    Image background;
 
     public static void main(String[] args) {
         new SpaceInRaiders();
@@ -17,51 +15,79 @@ public class SpaceInRaiders extends JPanel implements KeyListener, ActionListene
         JFrame main = new JFrame("SpaceX");
         main.setSize(1400,800);
 
-
-        //Panel
         main.add(this);
         setBackground(Color.BLACK);
+        main.addKeyListener(this);
+        main.setVisible(true);
 
-        //Player
-        player = new Player(675,700);
+        int playerWidth = 50;
+        int playerHeight = 50;
+        int startX = (getWidth() - playerWidth) / 2;
+        int startY = getHeight() - playerHeight - 20; // 20 Pixel Abstand zum unteren Rand
 
-        //GameLoop
+        player = new Player(startX, startY);
+
+        background = Toolkit.getDefaultToolkit().getImage(getClass().getResource("background.png"));
+
+
         Thread thread = new Thread(this);
         thread.start();
 
-
-        main.setVisible(true);
         main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     protected void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
-        graphics.setColor(Color.BLUE);
-        graphics.fillRect(player.x,player.y,player.width,player.height);
+        graphics.drawImage(background, 0, 0, getWidth(),getHeight(), this);
+        player.draw(graphics,this);
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT -> player.direction = 3;
+            case KeyEvent.VK_RIGHT -> player.direction = 4;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        player.direction = 0;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
+    public void actionPerformed(ActionEvent e) {}
 
     @Override
     public void run() {
+        while (true) {
 
+            move();
+            repaint();
+
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void move() {
+        switch (player.direction) {
+            case 3 -> player.x -= player.speed; // LEFT
+            case 4 -> player.x += player.speed; // RIGHT
+        }
+
+        // Bildschirm-Wrapping
+        if (player.x < -player.width) {
+            player.x = getWidth();
+        } else if (player.x > getWidth()) {
+            player.x = -player.width;
+        }
     }
 }
+

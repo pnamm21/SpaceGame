@@ -15,4 +15,9 @@ public abstract class Space extends Rectangle {
         y = start_y;
     }
 
+    public void draw(Graphics graphics, Component component){
+
+        graphics.drawImage(image, x, y,width,height, component);
+    }
+
 }
