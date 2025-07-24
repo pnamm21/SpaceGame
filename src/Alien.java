@@ -9,7 +9,7 @@ public class Alien extends Space{
         height = 35;
         speed = 7;
         direction = Space.RIGHT;
-        image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("alien3.png"));
+        image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("images/alien3.png"));
     }
 
     public void move(){

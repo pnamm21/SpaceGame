@@ -8,7 +8,7 @@ public class Bullets extends Space {
         speed = 7;
         width = 100;
         height = 60;
-        image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("bullet.png"));
+        image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("images/bullet.png"));
     }
 
     public void move() {
